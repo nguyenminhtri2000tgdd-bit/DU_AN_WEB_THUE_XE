@@ -1,0 +1,45 @@
+﻿@{
+    string? Cur(string controller) =>
+        ViewContext.RouteData.Values["controller"]?.ToString() == controller ? "page" : null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — DT-Rent</title>
+    <meta name="theme-color" content="#001D45" />
+    <link rel="icon" href="~/assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip-link" href="#noi-dung">Bỏ qua, đến nội dung chính</a>
+
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <img class="brand__logo" src="~/assets/logo.svg" alt="" width="48" height="48" />
+                <span class="brand__name">DT<span>Rent</span></span>
+            </a>
+            <nav class="site-nav" aria-label="Điều hướng chính">
+                <ul class="site-nav__list">
+                    <li><a class="site-nav__link" asp-controller="Home" asp-action="Index"
+                           aria-current="@Cur("Home")">Trang chủ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="noi-dung">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p>DT-Rent · Cho thuê ô tô tại Đồng Tháp</p>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DtRent.Application/DtRent.Application.csproj" />
+    <Project Path="src/DtRent.Domain/DtRent.Domain.csproj" />
+    <Project Path="src/DtRent.Infrastructure/DtRent.Infrastructure.csproj" />
+    <Project Path="src/DtRent.Web/DtRent.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DtRent.Tests/DtRent.Tests.csproj" />
+  </Folder>
+</Solution>
