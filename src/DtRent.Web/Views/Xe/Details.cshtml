@@ -1,0 +1,73 @@
+@model XeChiTietVm
+@{
+    ViewData["Title"] = Model.TenXe;
+}
+<div class="container page">
+    <article class="detail">
+        <header class="detail__head">
+            <a class="back-link" asp-controller="Xe" asp-action="Index">← Quay lại danh sách xe</a>
+            <p class="card__meta">
+                <span class="tag">@Model.TenNhom</span>
+                <span class="badge badge--@Model.TrangThaiCss">@Model.TrangThaiChu</span>
+            </p>
+            <h1>@Model.TenXe</h1>
+            <p class="detail__organizer">Biển số <strong>@Model.BienSo</strong></p>
+        </header>
+
+        <img class="detail__media" src="@Model.AnhUrl" alt="@Model.TenXe" width="640" height="360">
+
+        <section class="detail__info info-card" aria-labelledby="gia-thue">
+            <h2 id="gia-thue">Giá thuê</h2>
+            <dl>
+                <dt>Giá theo ngày</dt>
+                <dd>@Model.GiaNgayText</dd>
+                <dt>Giới hạn km</dt>
+                <dd>@Model.GioiHanKmText</dd>
+                @if (Model.PhiVuotKmText is not null)
+                {
+                    <dt>Phí vượt km</dt>
+                    <dd>@Model.PhiVuotKmText</dd>
+                }
+                <dt>Phí trả trễ</dt>
+                <dd>@Model.PhiTreText</dd>
+                <dt>Tiền cọc</dt>
+                <dd>@Model.TienCocText</dd>
+            </dl>
+        </section>
+
+        <section class="detail__content prose" aria-labelledby="thong-so">
+            <h2 id="thong-so">Thông số xe</h2>
+            <ul>
+                <li>Hãng: @Model.HangSanXuat, dòng xe @Model.DongXe, đời @Model.NamSanXuat.</li>
+                <li>Số chỗ ngồi: @Model.SoCho. Nhiên liệu: @Model.NhienLieu.</li>
+                @if (Model.PinText is not null)
+                {
+                    <li>Tình trạng pin hiện tại: @Model.PinText.</li>
+                }
+                <li>Đã chạy: @Model.SoKmText.</li>
+            </ul>
+        </section>
+
+        <section class="detail__prep prose" aria-labelledby="dieu-kien">
+            <h2 id="dieu-kien">Điều kiện thuê</h2>
+            <ul>
+                <li>Giấy phép lái xe còn hiệu lực đến hết ngày hẹn trả, thuộc một trong các hạng: <strong>@Model.HangGplxText</strong>.</li>
+                <li>Đặt cọc @Model.TienCocText khi nhận xe.</li>
+                <li>Trả trễ so với giờ hẹn bị tính @Model.PhiTreText (phần lẻ làm tròn lên thành một giờ).</li>
+                <li>Khách hạng Bạc được giảm 5%, hạng Vàng giảm 10% trên tổng tiền thuê.</li>
+            </ul>
+        </section>
+
+        <footer class="detail__foot cta">
+            @if (Model.SanSang)
+            {
+                <p>Xe đang sẵn sàng cho thuê.</p>
+                <a class="btn btn--primary" asp-controller="Phieu" asp-action="Lap" asp-route-xeId="@Model.Id">Lập phiếu thuê</a>
+            }
+            else
+            {
+                <p>Xe hiện không thể thuê (trạng thái: @Model.TrangThaiChu).</p>
+            }
+        </footer>
+    </article>
+</div>

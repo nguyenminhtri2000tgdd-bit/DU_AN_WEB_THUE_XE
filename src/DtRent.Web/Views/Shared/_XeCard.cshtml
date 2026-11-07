@@ -1,0 +1,16 @@
+@model XeCardVm
+
+<article class="card event-card">
+    <img class="card__media" src="@Model.AnhUrl" alt="@Model.TenXe" width="640" height="360" loading="lazy">
+    <div class="card__body">
+        <p class="card__meta">
+            <span class="tag">@Model.TenNhom</span>
+            <span class="badge badge--@Model.TrangThaiCss">@Model.TrangThaiChu</span>
+        </p>
+        <h3 class="card__title">
+            <a asp-controller="Xe" asp-action="Details" asp-route-id="@Model.Id">@Model.TenXe</a>
+        </h3>
+        <p class="event-card__info">@Model.BienSo · @Model.SoCho chỗ · @Model.NhienLieu</p>
+        <p class="event-card__seats">@Model.GiaText mỗi ngày</p>
+    </div>
+</article>

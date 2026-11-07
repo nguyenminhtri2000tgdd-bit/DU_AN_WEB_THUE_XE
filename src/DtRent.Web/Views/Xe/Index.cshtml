@@ -1,0 +1,59 @@
+@model XeDanhSachVm
+@{
+    ViewData["Title"] = "Xe cho thuê";
+}
+<div class="container page">
+    <h1>Xe cho thuê</h1>
+    <p class="page__intro">
+        Chọn xe phù hợp với chuyến đi của bạn. Xe có nhãn <strong>Sẵn sàng</strong> có thể thuê ngay.
+    </p>
+
+    <form class="form" method="get" asp-controller="Xe" asp-action="Index">
+        <fieldset>
+            <legend>Lọc danh sách</legend>
+            <div class="form__grid">
+                <p class="field">
+                    <label for="nhom">Nhóm xe</label>
+                    <select id="nhom" name="nhom">
+                        <option value="">Tất cả nhóm xe</option>
+                        @foreach (var n in Model.NhomXe)
+                        {
+                            <option value="@n.Ma" selected="@(n.Ma == Model.NhomDangChon)">@n.Ten</option>
+                        }
+                    </select>
+                </p>
+                <p class="field">
+                    <label for="trang-thai">Trạng thái</label>
+                    <select id="trang-thai" name="trangThai">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="SAN_SANG" selected="@(Model.TrangThaiDangChon == "SAN_SANG")">Sẵn sàng</option>
+                        <option value="DANG_CHO_THUE" selected="@(Model.TrangThaiDangChon == "DANG_CHO_THUE")">Đang cho thuê</option>
+                        <option value="DANG_BAO_TRI" selected="@(Model.TrangThaiDangChon == "DANG_BAO_TRI")">Đang bảo trì</option>
+                    </select>
+                </p>
+            </div>
+        </fieldset>
+        <p class="btn-row">
+            <button class="btn btn--primary" type="submit">Lọc</button>
+            <a class="btn btn--ghost" asp-controller="Xe" asp-action="Index">Xóa bộ lọc</a>
+        </p>
+    </form>
+
+    <section class="section" aria-labelledby="danh-sach">
+        <h2 id="danh-sach" class="section__head">@Model.Xe.Count xe</h2>
+
+        @if (Model.Xe.Count == 0)
+        {
+            <p>Không có xe nào khớp với bộ lọc đã chọn.</p>
+        }
+        else
+        {
+            <div class="card-grid">
+                @foreach (var xe in Model.Xe)
+                {
+                    <partial name="_XeCard" model="xe" />
+                }
+            </div>
+        }
+    </section>
+</div>

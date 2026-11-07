@@ -1,0 +1,86 @@
+@model LapPhieuVm
+@{
+    ViewData["Title"] = "Lập phiếu thuê";
+}
+<div class="container page page--narrow">
+    <a class="back-link" asp-controller="Xe" asp-action="Details" asp-route-id="@Model.Xe.Id">← Quay lại thông tin xe</a>
+
+    <h1>Lập phiếu thuê</h1>
+    <p class="page__intro">
+        Xe <strong>@Model.Xe.TenXe</strong>, biển số @Model.Xe.BienSo:
+        @Model.Xe.GiaNgayText mỗi ngày, tiền cọc @Model.Xe.TienCocText.
+        Ô có dấu <abbr title="bắt buộc">*</abbr> là bắt buộc.
+    </p>
+
+    @if (Model.LoiNghiepVu is not null)
+    {
+        <div class="alert alert--danger" role="alert">
+            <p class="alert__title">Không thể lập phiếu thuê</p>
+            <p>@Model.LoiNghiepVu</p>
+        </div>
+    }
+
+    @if (!Model.Xe.SanSang)
+    {
+        <div class="alert alert--danger" role="alert">
+            <p class="alert__title">Xe chưa sẵn sàng</p>
+            <p>Xe hiện đang ở trạng thái "@Model.Xe.TrangThaiChu" nên chưa thể lập phiếu thuê.</p>
+        </div>
+    }
+    else
+    {
+        <form class="form" method="post" asp-controller="Phieu" asp-action="Lap">
+            <input type="hidden" asp-for="Form.XeId" />
+
+            <fieldset>
+                <legend>Thông tin phiếu thuê</legend>
+
+                <div class="form__grid">
+                    <p class="field field--full">
+                        <label asp-for="Form.KhachHangId">Khách hàng <abbr title="bắt buộc">*</abbr></label>
+                        <select asp-for="Form.KhachHangId" asp-items="Model.KhachHang" required>
+                            <option value="">— Chọn khách hàng —</option>
+                        </select>
+                        <span asp-validation-for="Form.KhachHangId" class="field__error"></span>
+                    </p>
+
+                    <p class="field">
+                        <label asp-for="Form.ThoiDiemNhan">Thời điểm nhận xe <abbr title="bắt buộc">*</abbr></label>
+                        <input asp-for="Form.ThoiDiemNhan" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}"
+                               required aria-describedby="nhan-hint">
+                        <small id="nhan-hint">Giờ Việt Nam.</small>
+                        <span asp-validation-for="Form.ThoiDiemNhan" class="field__error"></span>
+                    </p>
+
+                    <p class="field">
+                        <label asp-for="Form.SoNgayThue">Số ngày thuê <abbr title="bắt buộc">*</abbr></label>
+                        <input asp-for="Form.SoNgayThue" type="number" min="1" max="365" step="1"
+                               inputmode="numeric" required aria-describedby="ngay-hint">
+                        <small id="ngay-hint">Từ 1 đến 365 ngày. Giờ hẹn trả = giờ nhận xe cộng số ngày thuê.</small>
+                        <span asp-validation-for="Form.SoNgayThue" class="field__error"></span>
+                    </p>
+
+                    <p class="field field--full">
+                        <label asp-for="Form.NhanVienId">Nhân viên lập phiếu <abbr title="bắt buộc">*</abbr></label>
+                        <select asp-for="Form.NhanVienId" asp-items="Model.NhanVien" required aria-describedby="nv-hint">
+                            <option value="">— Chọn nhân viên —</option>
+                        </select>
+                        <small id="nv-hint">Tạm thời chọn thủ công; khi có đăng nhập, mục này sẽ tự lấy từ tài khoản.</small>
+                        <span asp-validation-for="Form.NhanVienId" class="field__error"></span>
+                    </p>
+
+                    <p class="field field--full">
+                        <label asp-for="Form.GhiChu">Ghi chú</label>
+                        <textarea asp-for="Form.GhiChu" rows="3" maxlength="500"></textarea>
+                        <span asp-validation-for="Form.GhiChu" class="field__error"></span>
+                    </p>
+                </div>
+            </fieldset>
+
+            <p class="btn-row">
+                <button class="btn btn--primary" type="submit">Lập phiếu thuê</button>
+                <a class="btn btn--ghost" asp-controller="Xe" asp-action="Details" asp-route-id="@Model.Xe.Id">Hủy</a>
+            </p>
+        </form>
+    }
+</div>

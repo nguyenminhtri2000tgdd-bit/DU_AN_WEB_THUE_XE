@@ -1,0 +1,96 @@
+@model TraXeVm
+@{
+    ViewData["Title"] = "Trả xe " + Model.Phieu.MaPhieu;
+}
+<div class="container page page--narrow">
+    <a class="back-link" asp-controller="Phieu" asp-action="ChiTiet" asp-route-id="@Model.Phieu.Id">← Quay lại phiếu thuê</a>
+
+    <h1>Trả xe</h1>
+    <p class="page__intro">
+        Phiếu <strong>@Model.Phieu.MaPhieu</strong>: @Model.Phieu.TenXe, biển số @Model.Phieu.BienSo, khách @Model.Phieu.KhachHoTen.
+        Nhận xe lúc @Model.Phieu.NhanText, hẹn trả lúc @Model.Phieu.HenTraText, số km khi nhận @Model.Phieu.SoKmNhanText.
+        Ô có dấu <abbr title="bắt buộc">*</abbr> là bắt buộc.
+    </p>
+
+    @if (Model.LoiNghiepVu is not null)
+    {
+        <div class="alert alert--danger" role="alert">
+            <p class="alert__title">Không thể ghi nhận trả xe</p>
+            <p>@Model.LoiNghiepVu</p>
+        </div>
+    }
+
+    @if (!Model.Phieu.DangThue)
+    {
+        <div class="alert alert--danger" role="alert">
+            <p class="alert__title">Phiếu không còn ở trạng thái đang thuê</p>
+            <p>Phiếu này đang ở trạng thái "@Model.Phieu.TrangThaiChu" nên không thể trả xe.</p>
+        </div>
+    }
+    else
+    {
+        <form class="form" method="post" asp-controller="Phieu" asp-action="TraXe">
+            <input type="hidden" asp-for="Form.PhieuThueId" />
+
+            <fieldset>
+                <legend>Thông tin trả xe</legend>
+
+                <div class="form__grid">
+                    <p class="field">
+                        <label asp-for="Form.ThoiDiemTra">Thời điểm trả thực tế <abbr title="bắt buộc">*</abbr></label>
+                        <input asp-for="Form.ThoiDiemTra" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}"
+                               required aria-describedby="tra-hint">
+                        <small id="tra-hint">Giờ Việt Nam. Trả sau giờ hẹn sẽ bị tính phí trễ.</small>
+                        <span asp-validation-for="Form.ThoiDiemTra" class="field__error"></span>
+                    </p>
+
+                    <p class="field">
+                        <label asp-for="Form.SoKmTra">Số km hiện tại của xe <abbr title="bắt buộc">*</abbr></label>
+                        <input asp-for="Form.SoKmTra" type="number" min="@Model.Phieu.SoKmNhan" step="1"
+                               inputmode="numeric" required aria-describedby="km-hint">
+                        <small id="km-hint">Không nhỏ hơn @Model.Phieu.SoKmNhanText (số km khi nhận xe).</small>
+                        <span asp-validation-for="Form.SoKmTra" class="field__error"></span>
+                    </p>
+
+                    @if (Model.Phieu.CoPin)
+                    {
+                        <p class="field">
+                            <label asp-for="Form.TinhTrangPinTra">Tình trạng pin khi trả (%)</label>
+                            <input asp-for="Form.TinhTrangPinTra" type="number" min="0" max="100" step="1"
+                                   inputmode="numeric" aria-describedby="pin-hint">
+                            <small id="pin-hint">Khi nhận xe: @Model.Phieu.PinNhanText.</small>
+                            <span asp-validation-for="Form.TinhTrangPinTra" class="field__error"></span>
+                        </p>
+                    }
+
+                    <p class="field">
+                        <label asp-for="Form.NhanVienId">Nhân viên nhận xe <abbr title="bắt buộc">*</abbr></label>
+                        <select asp-for="Form.NhanVienId" asp-items="Model.NhanVien" required aria-describedby="nv-hint">
+                            <option value="">— Chọn nhân viên —</option>
+                        </select>
+                        <small id="nv-hint">Tạm thời chọn thủ công; khi có đăng nhập sẽ tự lấy từ tài khoản.</small>
+                        <span asp-validation-for="Form.NhanVienId" class="field__error"></span>
+                    </p>
+
+                    <p class="field field--check field--full">
+                        <input asp-for="Form.XeHuHong" type="checkbox">
+                        <label asp-for="Form.XeHuHong">Xe bị hư hỏng, cần chuyển sang trạng thái bảo trì</label>
+                    </p>
+
+                    <p class="field field--full">
+                        <label asp-for="Form.GhiChu">Ghi chú</label>
+                        <textarea asp-for="Form.GhiChu" rows="3" maxlength="500"></textarea>
+                        <span asp-validation-for="Form.GhiChu" class="field__error"></span>
+                    </p>
+                </div>
+            </fieldset>
+
+            <p><small>Sau khi xác nhận, hệ thống tính tiền và ghi nhận trả xe; thao tác này không hoàn tác được. Hãy kiểm tra kỹ số km và giờ trả.</small></p>
+
+            <p class="btn-row">
+                <button class="btn btn--primary" type="submit">Xác nhận trả xe</button>
+                <a class="btn btn--ghost" asp-controller="Phieu" asp-action="ChiTiet" asp-route-id="@Model.Phieu.Id">Hủy</a>
+            </p>
+        </form>
+    }
+</div>

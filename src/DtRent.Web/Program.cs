@@ -1,10 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using DtRent.Infrastructure.Persistence;
+using DtRent.Application.ThueXe;
+using DtRent.Application.TruyVan;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DtRentDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DtRent")));
-
+builder.Services.AddScoped<ThueXeDichVu>();
+builder.Services.AddScoped<XeTruyVanDichVu>();
+builder.Services.AddScoped<PhieuTruyVanDichVu>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

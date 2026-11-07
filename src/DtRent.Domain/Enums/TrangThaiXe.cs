@@ -17,6 +17,15 @@ public static class TrangThaiXeExtensions
         _ => trangThai.ToString()
     };
 
+        /// <summary>Chuyển enum thành mã lưu trong CSDL (SAN_SANG, DANG_CHO_THUE, DANG_BAO_TRI).</summary>
+    public static string MaCsdl(this TrangThaiXe trangThai) => trangThai switch
+    {
+        TrangThaiXe.SanSang => "SAN_SANG",
+        TrangThaiXe.DangChoThue => "DANG_CHO_THUE",
+        TrangThaiXe.DangBaoTri => "DANG_BAO_TRI",
+        _ => throw new ArgumentOutOfRangeException(nameof(trangThai), trangThai, null)
+    };
+
     /// <summary>Chuyển mã lưu trong CSDL (SAN_SANG, DANG_CHO_THUE, DANG_BAO_TRI) thành enum.</summary>
     public static TrangThaiXe TuMaCsdl(string ma) => ma switch
     {

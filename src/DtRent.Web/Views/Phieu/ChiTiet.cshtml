@@ -1,0 +1,131 @@
+@model PhieuChiTietVm
+@{
+    ViewData["Title"] = "Phiếu thuê " + Model.MaPhieu;
+}
+<div class="container page">
+    @if (TempData["ThongBao"] is string thongBao)
+    {
+        <div class="alert alert--success" role="status">
+            <p class="alert__title">Thành công</p>
+            <p>@thongBao</p>
+        </div>
+    }
+
+    <article class="detail">
+        <header class="detail__head">
+            <a class="back-link" asp-controller="Phieu" asp-action="Index">← Quay lại danh sách phiếu thuê</a>
+            <p class="card__meta">
+                <span class="tag">Phiếu thuê</span>
+                <span class="badge badge--@Model.TrangThaiCss">@Model.TrangThaiChu</span>
+            </p>
+            <h1>@Model.MaPhieu</h1>
+            <p class="detail__organizer">
+                Khách hàng <strong>@Model.KhachHoTen</strong> (@Model.KhachMa, @Model.KhachSdt), lập bởi @Model.NhanVien
+            </p>
+        </header>
+
+        <section class="detail__info info-card" aria-labelledby="thong-tin">
+            <h2 id="thong-tin">Thông tin thuê</h2>
+            <dl>
+                <dt>Xe</dt>
+                <dd><a asp-controller="Xe" asp-action="Details" asp-route-id="@Model.XeId">@Model.TenXe</a>, biển số @Model.BienSo</dd>
+                <dt>Nhận xe</dt>
+                <dd><time datetime="@Model.NhanIso">@Model.NhanText</time></dd>
+                <dt>Hẹn trả</dt>
+                <dd><time datetime="@Model.HenTraIso">@Model.HenTraText</time></dd>
+                <dt>Thời gian thuê</dt>
+                <dd>@Model.SoNgayText</dd>
+                <dt>Số km khi nhận</dt>
+                <dd>@Model.SoKmNhanText</dd>
+            </dl>
+        </section>
+
+        <section class="detail__content prose" aria-labelledby="gia-ap-dung">
+            <h2 id="gia-ap-dung">Giá áp dụng (đã chốt khi lập phiếu)</h2>
+            <ul>
+                <li>Giá theo ngày: @Model.GiaNgayText.</li>
+                <li>Giới hạn km: @Model.GioiHanKmText.</li>
+                @if (Model.PhiVuotKmText is not null)
+                {
+                    <li>Phí vượt km: @Model.PhiVuotKmText.</li>
+                }
+                <li>Phí trả trễ: @Model.PhiTreText (phần lẻ làm tròn lên thành một giờ).</li>
+                <li>Tiền cọc: @Model.TienCocText.</li>
+                <li>Hạng khách: @Model.HangText.</li>
+            </ul>
+        </section>
+
+                <section class="detail__prep prose" aria-labelledby="ket-qua">
+            @if (Model.TraXe is null)
+            {
+                <h2 id="ket-qua">Tạm tính</h2>
+                <ul>
+                    <li>Tiền thuê cơ bản: @Model.TienCoBanText.</li>
+                    <li>Giảm giá @Model.GiamText: @Model.TienGiamText.</li>
+                    <li>Còn lại: <strong>@Model.TienSauGiamText</strong>.</li>
+                    <li>Chưa gồm phí vượt km và phí trả trễ; hai khoản này được tính khi trả xe.</li>
+                </ul>
+            }
+            else
+            {
+                <h2 id="ket-qua">Kết quả trả xe</h2>
+                <p>
+                    Trả lúc <time datetime="@Model.TraXe.TraIso">@Model.TraXe.TraText</time>;
+                    số km hiện tại @Model.TraXe.SoKmTraText (đã đi @Model.TraXe.KmDaDiText);
+                    trạng thái xe sau khi trả: <strong>@Model.TraXe.XeSauTra</strong>.
+                    @if (Model.TraXe.PinTraText is not null)
+                    {
+                        <text> Pin khi trả: @Model.TraXe.PinTraText.</text>
+                    }
+                </p>
+
+                <div class="table-wrap" tabindex="0">
+                    <table class="table">
+                        <caption>Chi tiết tính tiền</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Khoản</th>
+                                <th scope="col">Cách tính</th>
+                                <th scope="col">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var dong in Model.TraXe.Dong)
+                            {
+                                <tr>
+                                    <th scope="row">@dong.Khoan</th>
+                                    <td>@dong.CachTinh</td>
+                                    <td>@dong.ThanhTien</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <p><strong>@Model.TraXe.ChenhLechNhan: @Model.TraXe.ChenhLechText</strong></p>
+
+                @if (!string.IsNullOrWhiteSpace(Model.TraXe.GhiChu))
+                {
+                    <p>Ghi chú khi trả xe: @Model.TraXe.GhiChu</p>
+                }
+            }
+        </section>
+
+                <footer class="detail__foot cta">
+            @if (Model.DangThue)
+            {
+                <p>Phiếu đang thuê. Khi khách mang xe đến trả, ghi nhận tại đây để hệ thống tính tiền.</p>
+                <a class="btn btn--primary" asp-controller="Phieu" asp-action="TraXe" asp-route-id="@Model.Id">Trả xe</a>
+            }
+            else
+            {
+                <p>Phiếu không còn ở trạng thái đang thuê.</p>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
+            {
+                <p>Ghi chú khi lập phiếu: @Model.GhiChu</p>
+            }
+        </footer>
+    </article>
+</div>

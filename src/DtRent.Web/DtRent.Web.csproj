@@ -19,6 +19,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>45986f61-85b0-47a4-a3a7-836bb9fac833</UserSecretsId>
+    <UseAppHost>false</UseAppHost>
   </PropertyGroup>
 
 </Project>

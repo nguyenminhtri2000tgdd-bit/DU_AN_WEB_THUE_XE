@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Ô tô">
+  <rect width="640" height="360" fill="#e3eefc"/>
+  <path d="M110 250 L110 222 Q110 205 128 200 L168 168 Q180 152 200 152 L380 152 Q402 152 416 168 L452 204 L510 212 Q530 216 530 236 L530 250 Z" fill="#00418a"/>
+  <path d="M192 166 L362 166 L394 204 L160 204 Z" fill="#cfe4ff"/>
+  <circle cx="200" cy="258" r="36" fill="#001d45"/>
+  <circle cx="200" cy="258" r="15" fill="#cfe4ff"/>
+  <circle cx="440" cy="258" r="36" fill="#001d45"/>
+  <circle cx="440" cy="258" r="15" fill="#cfe4ff"/>
+</svg>

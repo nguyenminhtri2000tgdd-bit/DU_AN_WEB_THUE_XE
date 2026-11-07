@@ -1,0 +1,46 @@
+@model IReadOnlyList<PhieuDongVm>
+@{
+    ViewData["Title"] = "Phiếu thuê";
+}
+<div class="container page">
+    <h1>Phiếu thuê</h1>
+    <p class="page__intro">
+        Các phiếu thuê mới nhất. Phiếu mới được lập từ trang thông tin của từng xe.
+    </p>
+
+    @if (Model.Count == 0)
+    {
+        <p>Chưa có phiếu thuê nào.</p>
+    }
+    else
+    {
+        <div class="table-wrap" tabindex="0">
+            <table class="table">
+                <caption>Danh sách phiếu thuê (giờ Việt Nam)</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Mã phiếu</th>
+                        <th scope="col">Khách hàng</th>
+                        <th scope="col">Xe</th>
+                        <th scope="col">Nhận xe</th>
+                        <th scope="col">Hẹn trả</th>
+                        <th scope="col">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model)
+                    {
+                        <tr>
+                            <th scope="row"><a asp-action="ChiTiet" asp-route-id="@p.Id">@p.MaPhieu</a></th>
+                            <td>@p.KhachHoTen</td>
+                            <td>@p.TenXe, @p.BienSo</td>
+                            <td><time datetime="@p.NhanIso">@p.NhanText</time></td>
+                            <td><time datetime="@p.HenTraIso">@p.HenTraText</time></td>
+                            <td><span class="badge badge--@p.TrangThaiCss">@p.TrangThaiChu</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
